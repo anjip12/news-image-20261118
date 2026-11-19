@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
-"""Place the drawn front page where the grader reads it.
-
-The entry image is rendered ahead of time by gen.py and shipped in
-this repository as entry.png; this program only puts a byte-identical
-copy at the output path. Standard library only, no network, no input
-besides the bundled image file.
+"""Entry point: copy entry.png from this file's directory into the output
+directory ($MAKEFUN_OUTPUT_DIR, or /output when unset). Stdlib only.
+The copy is byte-identical to the repo's entry.png.
 """
 import os
 import shutil
+import sys
 
 
 def main():
     here = os.path.dirname(os.path.abspath(__file__))
-    source = os.path.join(here, "entry.png")
-    target_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
-    os.makedirs(target_dir, exist_ok=True)
-    shutil.copyfile(source, os.path.join(target_dir, "entry.png"))
+    src = os.path.join(here, "entry.png")
+    outdir = os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output"
+    os.makedirs(outdir, exist_ok=True)
+    dst = os.path.join(outdir, "entry.png")
+    shutil.copyfile(src, dst)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
