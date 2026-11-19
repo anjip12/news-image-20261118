@@ -94,14 +94,14 @@ def headline(draw, x, y, text, width, size=30, max_lines=2, fill=INK):
 def bars(draw, x0, base, values, labels, colors):
     top = max(values)
     for i, value in enumerate(values):
-        height = int(108 * value / top)
+        height = int(140 * value / top)
         x = x0 + i * 185
-        draw.rectangle([x, base - height, x + 118, base], fill=colors[i])
+        draw.rectangle([x, base - height, x + 132, base], fill=colors[i])
         tag = "$%dbn" % value
         tw = draw.textlength(tag, font=F_NUM)
-        draw.text((x + (118 - tw) / 2, base - height - 30), tag, font=F_NUM, fill=INK)
+        draw.text((x + (132 - tw) / 2, base - height - 32), tag, font=F_NUM, fill=INK)
         lw = draw.textlength(labels[i], font=F_LAB)
-        draw.text((x + (118 - lw) / 2, base + 10), labels[i], font=F_LAB, fill=GREY)
+        draw.text((x + (132 - lw) / 2, base + 10), labels[i], font=F_LAB, fill=GREY)
     draw.line([x0 - 16, base, x0 + 3 * 185 - 30, base], fill=INK, width=3)
 
 
@@ -110,12 +110,19 @@ def bridge(draw, box):
     draw.rectangle(box, fill=SKY)
     draw.ellipse([x1 - 78, y0 + 12, x1 - 28, y0 + 62], fill=GOLD)
     mid = (y0 + y1) // 2
+    deck = mid - 26
     draw.rectangle([x0, mid, x1, y1], fill=SEA)
-    draw.line([x0, mid - 26, x0 + 92, mid - 26], fill=(70, 70, 70), width=10)
-    draw.line([x0 + 150, mid - 26, x1, mid - 26], fill=(70, 70, 70), width=10)
-    draw.line([x0 + 92, mid - 26, x0 + 122, mid + 6], fill=(70, 70, 70), width=10)
-    draw.arc([x0 + 108, mid - 78, x0 + 208, mid + 22], start=200, end=340, fill=(70, 70, 70), width=8)
-    draw.arc([x0 + 168, mid - 78, x1 - 8, mid + 22], start=200, end=340, fill=(70, 70, 70), width=8)
+    steel = (70, 70, 70)
+    # Two pylons still standing, with straight stay cables to the deck.
+    for px in (x0 + 52, x1 - 52):
+        draw.line([px, deck - 44, px, deck], fill=steel, width=7)
+        draw.line([px, deck - 44, px - 38, deck], fill=steel, width=3)
+        draw.line([px, deck - 44, px + 38, deck], fill=steel, width=3)
+    # Intact deck on both sides; the middle span has fallen into the strait.
+    draw.line([x0, deck, x0 + 92, deck], fill=steel, width=10)
+    draw.line([x0 + 178, deck, x1, deck], fill=steel, width=10)
+    draw.line([x0 + 92, deck, x0 + 128, mid + 14], fill=steel, width=10)
+    draw.line([x0 + 178, deck, x0 + 146, mid + 16], fill=steel, width=10)
     for cx in range(x0 + 8, x1 - 8, 34):
         draw.arc([cx, mid + 16, cx + 30, mid + 44], start=180, end=360, fill=(255, 255, 255), width=3)
 
@@ -149,7 +156,7 @@ def draw_page():
     card(draw, (24, 140, 636, 556))
     draw.text((44, 158), "MARKETS", font=F_KICK, fill=RED)
     y = headline(draw, 44, 190, "NVIDIA BEATS BIG: $115.8BN QUARTER", 572, size=40, max_lines=2)
-    y = para(draw, 44, y + 10, "Revenue doubles to $115.8bn, up 103%, and Nvidia guides $130bn next quarter \u2014 its first report since Jensen Huang quit. Shares jump after hours.", F_BODY, 572, 28)
+    y = para(draw, 44, y + 10, "Revenue doubles, up 103%, and guidance rises to $130bn \u2014 the first report since Jensen Huang quit.", F_BODY, 572, 28)
     bars(draw, 70, 520, [57, 96, 116], ["A YEAR AGO", "LAST QTR", "THIS QTR"], [(150, 180, 215), (80, 130, 195), (20, 60, 120)])
 
     # Right top: APEC opens in Shenzhen.
