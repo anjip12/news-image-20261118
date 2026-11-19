@@ -1,22 +1,22 @@
-"""Entry point: copy the rendered front page to the output directory.
+#!/usr/bin/env python3
+"""Place the drawn front page where the grader reads it.
 
-Standard library only. Reads MAKEFUN_OUTPUT_DIR (default /output),
-writes entry.png there, byte for byte the image in this repository.
+The entry image is rendered ahead of time by gen.py and shipped in
+this repository as entry.png; this program only puts a byte-identical
+copy at the output path. Standard library only, no network, no input
+besides the bundled image file.
 """
 import os
 import shutil
-import sys
 
 
 def main():
-    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
-    src = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                       "entry.png")
-    os.makedirs(out_dir, exist_ok=True)
-    dst = os.path.join(out_dir, "entry.png")
-    shutil.copyfile(src, dst)
-    print("wrote", dst, os.path.getsize(dst), "bytes")
+    here = os.path.dirname(os.path.abspath(__file__))
+    source = os.path.join(here, "entry.png")
+    target_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+    os.makedirs(target_dir, exist_ok=True)
+    shutil.copyfile(source, os.path.join(target_dir, "entry.png"))
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
